@@ -1,0 +1,105 @@
+package VIEW;
+
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import Controller.login_controller;
+import DTO.LoginUser;
+
+public class login_view extends JFrame {
+	private Main main;
+	login_controller dao = new login_controller();
+	private JButton btnLogin;
+	private JButton btnInit;
+	private JPasswordField passText;
+	private JTextField userText;
+	private boolean bLoginCheck;
+
+	ImageIcon i = new ImageIcon("./everytime/image/로그인뒷배경.png");
+	Image im = i.getImage();
+	//String idstr = LoginUser.getInstance().getId();
+	
+	
+	public static void main(String[] args) {
+		new login_view();
+	}
+
+	public login_view() {
+		setTitle("에브리 동의 로그인");
+		setLocation(700, 250);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setResizable(false); // 창 크기 수정불가
+
+		myPanel panel = new myPanel();
+		panel.setSize(500, 700);
+
+		this.add(panel);
+
+		setVisible(true);
+		setSize(500, 700);
+
+		panel.setLayout(null);
+
+		userText = new JTextField(20);
+		userText.setBounds(185, 330, 190, 35);
+		panel.add(userText);
+
+		passText = new JPasswordField(20);
+		passText.setBounds(185, 380, 190, 35);
+		panel.add(passText);
+
+		btnInit = new JButton(new ImageIcon("./everytime/image/회원가입버튼.png"));
+		btnInit.setBounds(200, 605, 100, 30);
+		panel.add(btnInit);
+
+		btnInit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new join_view();
+			}
+		});
+
+		btnLogin = new JButton(new ImageIcon("./everytime/image/로그인버튼.png"));
+		btnLogin.setBounds(82, 464, 334, 46);
+		btnLogin.setBorderPainted(false);
+		btnLogin.setContentAreaFilled(false);
+		btnLogin.setFocusPainted(false);
+
+		panel.add(btnLogin);
+
+		btnLogin.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String idstr = userText.getText();
+				String passtr = passText.getText();
+
+				if (dao.isLoginCheck(idstr, passtr) == true) {
+					JOptionPane.showMessageDialog(null, "로그인 성공!!");
+					dao.login_user(idstr);
+					System.out.println(idstr);
+
+					new main_view();
+					setVisible(false);
+				} else {
+					JOptionPane.showMessageDialog(null, "로그인 실패..");
+				}
+			}
+		});
+	}
+
+	class myPanel extends JPanel {
+		public void paint(Graphics g) {
+			super.paintComponent(g);
+			g.drawImage(im, 0, 0, null);
+		}
+	}
+}
